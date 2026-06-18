@@ -1,0 +1,21 @@
+{
+    "name": "flowbyte/deepseek",
+    "description": "808 AI DeepSeek Provider for WordPress AI Client — DeepSeek Chat and DeepSeek Coder.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.4",
+        "composer/installers": "^2.0",
+        "wordpress/php-ai-client": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlowByte\\EightOhEightDeepSeek\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}

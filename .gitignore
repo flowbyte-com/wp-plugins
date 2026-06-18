@@ -1,0 +1,5 @@
+# Build artifacts: pre-built plugin .zip files are regenerable from source
+*.zip
+
+# Worktrees
+.worktrees/

@@ -1,0 +1,21 @@
+{
+    "name": "flowbyte/openrouter_auto",
+    "description": "808 AI OpenRouter Provider for WordPress AI Client — access to GPT-4o, Claude, Gemini, Llama, DeepSeek, Mistral, and 100+ models.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.4",
+        "composer/installers": "^2.0",
+        "wordpress/php-ai-client": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlowByte\\EightOhEightOpenRouterProvider\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}

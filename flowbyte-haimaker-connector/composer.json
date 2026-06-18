@@ -1,0 +1,21 @@
+{
+    "name": "flowbyte/haimaker",
+    "description": "808 AI Haimaker Provider for WordPress AI Client — OpenAI-compatible API.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.4",
+        "composer/installers": "^2.0",
+        "wordpress/php-ai-client": "^1.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlowByte\\EightOhEightHaimaker\\": "src/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    }
+}

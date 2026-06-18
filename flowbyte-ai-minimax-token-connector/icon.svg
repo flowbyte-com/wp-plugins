@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
+  <defs>
+    <linearGradient id="mmt-icon-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="18" cy="18" r="17" fill="#0a0a0f" stroke="url(#mmt-icon-grad)" stroke-width="1.5"/>
+
+  <circle cx="18" cy="18" r="5" fill="url(#mmt-icon-grad)"/>
+
+  <circle cx="18" cy="7" r="2" fill="#f97316"/>
+  <circle cx="18" cy="29" r="2" fill="#fb923c"/>
+  <circle cx="7" cy="18" r="2" fill="#f97316"/>
+  <circle cx="29" cy="18" r="2" fill="#fb923c"/>
+
+  <line x1="18" y1="9" x2="18" y2="13" stroke="url(#mmt-icon-grad)" stroke-width="1.5"/>
+  <line x1="18" y1="23" x2="18" y2="27" stroke="url(#mmt-icon-grad)" stroke-width="1.5"/>
+  <line x1="9" y1="18" x2="13" y2="18" stroke="url(#mmt-icon-grad)" stroke-width="1.5"/>
+  <line x1="23" y1="18" x2="27" y2="18" stroke="url(#mmt-icon-grad)" stroke-width="1.5"/>
+
+  <circle cx="11" cy="11" r="1" fill="#f97316" opacity="0.7"/>
+  <circle cx="25" cy="11" r="1" fill="#fb923c" opacity="0.7"/>
+  <circle cx="11" cy="25" r="1" fill="#fb923c" opacity="0.7"/>
+  <circle cx="25" cy="25" r="1" fill="#f97316" opacity="0.7"/>
+</svg>
