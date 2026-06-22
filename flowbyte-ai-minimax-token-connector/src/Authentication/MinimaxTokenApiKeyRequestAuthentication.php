@@ -11,6 +11,7 @@ class MinimaxTokenApiKeyRequestAuthentication extends ApiKeyRequestAuthenticatio
 {
     public function authenticateRequest(Request $request): Request
     {
-        return $request->withHeader('X-Api-Key', $this->apiKey);
+        // Token-plan endpoint is OpenAI-compatible; Bearer auth, not Anthropic X-Api-Key.
+        return $request->withHeader('Authorization', 'Bearer ' . $this->apiKey);
     }
 }

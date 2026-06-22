@@ -43,3 +43,29 @@ function register_provider(): void
 }
 
 add_action('init', __NAMESPACE__ . '\\register_provider', 5);
+
+/**
+ * Adds the MiniMax Token Plan provider/model to the AI service preferred-models list.
+ *
+ * Without this filter, the WordPress AI plugin's `get_preferred_models_for_text_generation()`
+ * hardcodes only [anthropic, google, openai]. With no credentials set for those (Anthropic
+ * plugin installed but key not configured; Google/OpenAI plugins not installed), every
+ * text-generation call fails with "Title generation failed. Please ensure you have a
+ * connected provider that supports text generation." even though this plugin is fully
+ * configured and connected.
+ *
+ * @since 1.0.1
+ *
+ * @param array<int, array{string, string}> $preferred_models Existing preferred-models list.
+ * @return array<int, array{string, string}> Filtered list with MiniMax prepended.
+ */
+function add_to_preferred_text_models(array $preferred_models): array
+{
+    // Prepend so it's tried first when its model is configured.
+    array_unshift(
+        $preferred_models,
+        array('flowbyte-minimax-token', 'MiniMax-M2.7')
+    );
+    return $preferred_models;
+}
+add_filter('wpai_preferred_text_models', __NAMESPACE__ . '\\add_to_preferred_text_models');

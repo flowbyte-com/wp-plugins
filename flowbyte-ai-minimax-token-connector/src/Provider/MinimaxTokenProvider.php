@@ -21,7 +21,10 @@ class MinimaxTokenProvider extends AbstractApiProvider
 {
     protected static function baseUrl(): string
     {
-        return 'https://api.minimax.io/anthropic/v1';
+        // MiniMax exposes the token-plan models on the OpenAI-compatible endpoint.
+        // The /anthropic/v1 prefix only exposes /messages (Anthropic-native) and
+        // returns 404 for /chat/completions, which is what the SDK sends.
+        return 'https://api.minimax.io/v1';
     }
 
     protected static function createModel(
