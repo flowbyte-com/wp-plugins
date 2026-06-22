@@ -4,7 +4,7 @@
  * Plugin Name: 808 AI MiniMax Token Plan Provider
  * Plugin URI: https://github.com/flowbyte/flowbyte-ai-minimax-token
  * Description: MiniMax Token Plan provider for WordPress AI Client — M2.7 model, same cost for all models via token plan.
- * Version: 1.0.0
+ * Version: 1.0.3
  * Author: Flowbyte
  * Author URI: https://flowbyte.com
  * License: GPL-2.0-or-later
@@ -48,11 +48,9 @@ add_action('init', __NAMESPACE__ . '\\register_provider', 5);
  * Adds the MiniMax Token Plan provider/model to the AI service preferred-models list.
  *
  * Without this filter, the WordPress AI plugin's `get_preferred_models_for_text_generation()`
- * hardcodes only [anthropic, google, openai]. With no credentials set for those (Anthropic
- * plugin installed but key not configured; Google/OpenAI plugins not installed), every
- * text-generation call fails with "Title generation failed. Please ensure you have a
- * connected provider that supports text generation." even though this plugin is fully
- * configured and connected.
+ * hardcodes only [anthropic, google, openai]. With no credentials set for those, every
+ * text-generation call fails with "Title generation failed…" even though this plugin is
+ * fully configured and connected.
  *
  * @since 1.0.1
  *

@@ -40,6 +40,8 @@ class MinimaxTokenModelMetadataDirectory extends AbstractApiBasedModelMetadataDi
             new SupportedOption(OptionEnum::topP()),
             new SupportedOption(OptionEnum::stopSequences()),
             new SupportedOption(OptionEnum::customOptions()),
+            new SupportedOption(OptionEnum::inputModalities()),
+            new SupportedOption(OptionEnum::outputModalities()),
         ];
     }
 
