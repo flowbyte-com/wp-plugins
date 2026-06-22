@@ -11,6 +11,6 @@ class MinimaxTokenApiKeyRequestAuthentication extends ApiKeyRequestAuthenticatio
 {
     public function authenticateRequest(Request $request): Request
     {
-        return $request->withHeader('Authorization', 'Bearer ' . $this->apiKey);
+        return $request->withHeader('X-Api-Key', $this->apiKey);
     }
 }
