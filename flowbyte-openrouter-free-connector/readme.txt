@@ -34,6 +34,13 @@ Unlike other provider plugins that ship with a fixed list of models (and silentl
 2. Activate the plugin through the **Plugins** screen in WordPress
 3. Sign up at [openrouter.ai](https://openrouter.ai/) (free, no payment required) and create an API key
 4. Go to **Settings → Connectors**, find "808 AI (OpenRouter Free)", and paste your key
+5. **Approve this plugin to use the connector** — WordPress 7.0's AI plugin gates outbound calls per-caller. Visit **Tools → Connector Approvals** and toggle on "808 AI OpenRouter Free Provider" for the "808 AI (OpenRouter Free)" connector. Without this step, features like AI-generated titles, excerpts, and the chat interface will silently fail with a generic network error.
+
+== Troubleshooting ==
+
+= My AI feature returns 'failed' or 'network error' even though the connector says Connected =
+
+You probably need to approve this plugin to use the connector. Go to **Tools → Connector Approvals** and make sure "808 AI OpenRouter Free Provider" is toggled on for the "808 AI (OpenRouter Free)" connector. This is a one-time per-site admin step introduced in WordPress 7.0.
 
 == Frequently Asked Questions ==
 
