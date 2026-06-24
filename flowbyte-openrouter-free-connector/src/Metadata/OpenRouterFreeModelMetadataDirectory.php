@@ -38,6 +38,13 @@ use FlowByte\EightOpenRouterFree\Provider\OpenRouterFreeProvider;
  *         pricing?: array<string, string>
  *     }>
  * }
+ *
+ * Free-tier identification uses pricing, not the `:free` ID suffix, because
+ * OpenRouter also exposes meta-model routers (`openrouter/free`,
+ * `openrouter/owl-alpha`) that have no `:free` marker in the ID but charge
+ * $0 for prompt and completion. The `:free` suffix on per-model IDs is a
+ * stable secondary signal for the model-level free tier; using both checks
+ * covers every currently-known way OpenRouter marks a model as free.
  */
 class OpenRouterFreeModelMetadataDirectory extends AbstractOpenAiCompatibleModelMetadataDirectory
 {
@@ -65,22 +72,73 @@ class OpenRouterFreeModelMetadataDirectory extends AbstractOpenAiCompatibleModel
         }
 
         $models = [];
+        $smartRouterIds = ['openrouter/free'];
+        $smartRouters = [];
+
         foreach ($responseData['data'] as $modelData) {
             if (!is_array($modelData) || !isset($modelData['id']) || !is_string($modelData['id'])) {
                 continue;
             }
 
-            // OpenRouter marks free models with a `:free` suffix on the ID.
-            // (e.g. `meta-llama/llama-3.3-70b-instruct:free`,
-            //        `google/gemma-4-31b-it:free`).
-            if (!str_ends_with($modelData['id'], ':free')) {
+            if (!$this->isFreeModel($modelData)) {
                 continue;
             }
 
-            $models[] = $this->buildModelMetadata($modelData);
+            $metadata = $this->buildModelMetadata($modelData);
+
+            // Surface OpenRouter's smart-router meta-models first so the AI
+            // plugin's "pick first matching model" auto-selection uses the
+            // router instead of an arbitrary explicit model. `openrouter/free`
+            // dynamically picks the best currently-free model for each request
+            // based on load, capabilities, and request shape.
+            if (in_array($modelData['id'], $smartRouterIds, true)) {
+                $smartRouters[] = $metadata;
+            } else {
+                $models[] = $metadata;
+            }
         }
 
-        return $models;
+        // Stable sort: smart routers first (in declared order), then explicit
+        // models by ID. AI Client's prompt builder picks the first metadata
+        // entry whose options match the prompt requirements.
+        usort(
+            $models,
+            static fn($a, $b) => strcmp($a->getId(), $b->getId())
+        );
+
+        return array_merge($smartRouters, $models);
+    }
+
+    /**
+     * Decides whether a model entry from OpenRouter's /models response should
+     * be exposed as part of this free-tier connector.
+     *
+     * Two ways a model can be free:
+     *   1. Pricing is exactly $0 for both prompt and completion
+     *      (`openrouter/free`, `openrouter/owl-alpha`).
+     *   2. The ID ends with `:free`
+     *      (`meta-llama/llama-3.3-70b-instruct:free`, etc.).
+     *
+     * @param array<string, mixed> $modelData
+     */
+    private function isFreeModel(array $modelData): bool
+    {
+        $id = $modelData['id'];
+        if (is_string($id) && str_ends_with($id, ':free')) {
+            return true;
+        }
+
+        $pricing = $modelData['pricing'] ?? null;
+        if (!is_array($pricing)) {
+            return false;
+        }
+
+        $prompt = $pricing['prompt'] ?? null;
+        $completion = $pricing['completion'] ?? null;
+
+        // OpenRouter reports `$0` as the string "0" for zero-priced models.
+        // Negative numbers (`-1`) mean variable / paid; only exact "0" is free.
+        return $prompt === '0' && $completion === '0';
     }
 
     /**
