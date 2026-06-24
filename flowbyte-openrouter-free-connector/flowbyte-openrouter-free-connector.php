@@ -4,7 +4,7 @@
  * Plugin Name: 808 AI OpenRouter Free Provider
  * Plugin URI: https://github.com/flowbyte/flowbyte-openrouter-free-connector
  * Description: OpenRouter Free provider for WordPress AI Client — free models including Llama, Mistral, and OpenChat.
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Flowbyte
  * Author URI: https://flowbyte.com
  * License: GPL-2.0-or-later
