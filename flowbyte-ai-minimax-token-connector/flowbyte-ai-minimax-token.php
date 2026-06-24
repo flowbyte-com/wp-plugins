@@ -4,7 +4,7 @@
  * Plugin Name: 808 AI MiniMax Token Plan Provider
  * Plugin URI: https://github.com/flowbyte/flowbyte-ai-minimax-token
  * Description: MiniMax Token Plan provider for WordPress AI Client — M2.7 model, same cost for all models via token plan.
- * Version: 1.0.0
+ * Version: 1.0.4
  * Author: Flowbyte
  * Author URI: https://flowbyte.com
  * License: GPL-2.0-or-later
