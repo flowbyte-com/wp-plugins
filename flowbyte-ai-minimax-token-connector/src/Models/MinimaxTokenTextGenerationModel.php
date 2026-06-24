@@ -33,66 +33,36 @@ class MinimaxTokenTextGenerationModel extends AbstractOpenAiCompatibleTextGenera
         );
     }
 
-    protected function prepareGenerateTextParams(array $prompt): array
+    /**
+     * Strips the <think>...</think> reasoning wrapper from MiniMax content.
+     *
+     * MiniMax's reasoning-enabled models (M2.7, M3) emit chain-of-thought
+     * inline in `choices[].message.content` as `<think>...</think>\n\n<answer>`.
+     * The OpenAI-compatible parser preserves `content` verbatim, which would
+     * leak the model's reasoning into the user-visible result. Strip the
+     * wrapper here so the assistant surface text matches expectations.
+     *
+     * @param string $content Raw `content` field from the API response.
+     * @return string Content with the leading reasoning block removed.
+     */
+    private function stripThinkingWrapper(string $content): string
     {
-        $config = $this->getConfig();
-
-        $params = [
-            'model' => $this->metadata()->getId(),
-            'messages' => $this->prepareMessagesParam($prompt),
-        ];
-
-        $systemInstruction = $config->getSystemInstruction();
-        if ($systemInstruction !== null && $systemInstruction !== '') {
-            $params['system'] = $systemInstruction;
-        }
-
-        $maxTokens = $config->getMaxTokens();
-        if ($maxTokens !== null) {
-            $params['max_tokens'] = $maxTokens;
-        } else {
-            $params['max_tokens'] = 2048;
-        }
-
-        $temperature = $config->getTemperature();
-        if ($temperature !== null) {
-            $params['temperature'] = $temperature;
-        }
-
-        $topP = $config->getTopP();
-        if ($topP !== null) {
-            $params['top_p'] = $topP;
-        }
-
-        $stopSequences = $config->getStopSequences();
-        if (!empty($stopSequences)) {
-            $params['stop_sequences'] = $stopSequences;
-        }
-
-        return $params;
+        $cleaned = preg_replace('/^\s*<think>.*?<\/think>\s*/s', '', $content);
+        return is_string($cleaned) ? $cleaned : $content;
     }
 
-    protected function prepareMessagesParam(array $messages): array
+    protected function parseResponseChoiceMessageParts(array $messageData, int $index): array
     {
-        $result = [];
-        foreach ($messages as $message) {
-            $roleValue = $message->getRole();
-            $roleString = is_object($roleValue) && method_exists($roleValue, 'value') ? $roleValue->value : (string) $roleValue;
-            if ($roleString === 'system') {
-                continue;
-            }
-            $apiRole = ($roleString === 'model') ? 'assistant' : 'user';
-            $textContent = '';
-            foreach ($message->getParts() as $part) {
-                $text = is_object($part) && method_exists($part, 'getText') ? $part->getText() : (is_string($part) ? $part : '');
-                if (is_string($text) && $text !== '') {
-                    $textContent .= $text;
+        $parts = parent::parseResponseChoiceMessageParts($messageData, $index);
+        foreach ($parts as $i => $part) {
+            if ($part->getType()->isText()) {
+                $cleaned = $this->stripThinkingWrapper($part->getText());
+                if ($cleaned !== $part->getText()) {
+                    $parts[$i] = new \WordPress\AiClient\Messages\DTO\MessagePart($cleaned);
+                    break;
                 }
             }
-            if ($textContent !== '') {
-                $result[] = ['role' => $apiRole, 'content' => $textContent];
-            }
         }
-        return $result;
+        return $parts;
     }
 }
